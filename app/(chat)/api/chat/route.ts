@@ -12,7 +12,7 @@ import { z } from 'zod';
 import { auth, signIn } from '@/app/(auth)/auth';
 import { customModel } from '@/lib/ai';
 import { models, reasoningModels } from '@/lib/ai/models';
-import { rateLimiter } from '@/lib/rate-limit';
+import { getRateLimiter } from '@/lib/rate-limit';
 import {
   codePrompt,
   systemPrompt,
@@ -137,6 +137,7 @@ export async function POST(request: Request) {
 
   // Apply rate limiting
   const identifier = session.user.id;
+  const rateLimiter = getRateLimiter();
   const { success, limit, reset, remaining } =
     await rateLimiter.limit(identifier);
 
